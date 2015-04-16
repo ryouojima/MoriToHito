@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Mori to Hito</title>
+		<style type="text/css">
+			<!--
+				#map_canvas {
+					position : relative;
+					padding  : 0 0 56%;
+					height   : 0;
+					overflow : hidden;
+				}
+				#map_canvas iframe{
+					position : absolute;
+					top      : 0;
+					left     : 0;
+					width    : 100% !important;
+					height   : 100% !important;
+				}
+			 -->
+		</style>
+		<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+		<script type="text/javascript">
+			var areas = [
+				['Aruba',12.512377, -69.978679, 0, null, null],
+				['Andorra',42.516210, 1.524201, 0, null, null],
+				['Afghanistan',33.778940, 65.462220, 0, null, null],
+				['Angola',-12.396437, 17.615052, 0, null, null],
+				['Albania',41.363508, 20.160572, 0, null, null],
+				['Arab World',null,null, 0, null, null],
+				['United Arab Emirates',23.974693, 54.423040, 0, null, null],
+				['Argentina',-35.146751, -65.708296, 0, null, null],
+				['Armenia',40.267904, 44.623261, 0, null, null],
+				['American Samoa',-14.283285, -170.700643, 0, null, null],
+				['Antigua and Barbuda',17.077914, -61.817823, 0, null, null],
+				['Australia',-24.811765, 135.314582, 0, null, null],
+				['Austria',47.596551, 14.444368, 0, null, null],
+				['Azerbaijan',40.357699, 48.131920, 0, null, null],
+				['Burundi',-3.266142, 29.848365, 0, null, null],
+				['Belgium',50.492611, 4.628999, 0, null, null],
+				['Benin',9.641273, 2.298938, 0, null, null],
+				['Burkina Faso',12.359956, -1.786393, 0, null, null],
+				['Bangladesh',24.146232, 89.926872, 0, null, null],
+				['Bulgaria',42.769713, 25.571195, 0, null, null],
+				['Bahrain',26.058215, 50.557553, 0, null, null],
+				['Bahamas, The',25.035539, -77.406595, 0, null, null],
+				['Bosnia and Herzegovina',44.565862, 17.946809, 0, null, null],
+				['Belarus',53.226503, 27.779825, 0, null, null],
+				['Belize',17.565613, -88.161904, 0, null, null],
+				['Bermuda',32.304524, -64.760903, 0, null, null],
+				['Bolivia',-16.726118, -64.604084, 0, null, null],
+				['Brazil',-8.511969, -55.553549, 0, null, null],
+				['Barbados',13.179770, -59.536937, 0, null, null],
+				['Brunei Darussalam',4.511927, 114.681174, 0, null, null],
+				['Bhutan',27.421766, 90.463319, 0, null, null],
+				['Botswana',-22.149638, 23.874115, 0, null, null],
+				['Central African Republic',6.673966, 20.848811, 0, null, null],
+				['Canada',60.219429, -111.732422, 0, null, null],
+				['Central Europe and the Baltics',null,null, 0, null, null],
+				['Switzerland',47.420623, 8.487882, 0, null, null],
+				['Channel Islands',49.417211, -2.333505, 0, null, null],
+				['Chile',-32.510039, -70.969574, 0, null, null],
+				['China',34.891857, 103.608768, 0, null, null],
+				['Cote d Ivoire',7.708872, -5.547545, 0, null, null],
+				['Cameroon',5.612262, 12.762066, 0, null, null],
+				['Congo, Rep.',-0.803401, 15.381706, 0, null, null],
+				['Colombia',3.523732, -72.227012, 0, null, null],
+				['Comoros',-11.659378, 43.325905, 0, null, null],
+				['Cabo Verde',15.095614, -23.618905, 0, null, null],
+				['Costa Rica',10.457755, -84.045444, 0, null, null],
+				['Caribbean small states',null,null, 0, null, null],
+				['Cuba',21.678998, -78.777759, 0, null, null],
+				['Curacao',null, null, 0, null, null],
+				['Cayman Islands',19.322245, -81.239657, 0, null, null],
+				['Cyprus',35.049545, 33.212757, 0, null, null],
+				['Czech Republic',49.679518, 15.189268, 0, null, null],
+				['Germany',51.088271, 10.563983, 0, null, null],
+				['Djibouti',11.755454, 42.637786, 0, null, null],
+				['Dominica',15.440420, -61.333974, 0, null, null],
+				['Denmark',55.586577, 10.168765, 0, null, null],
+				['Dominican Republic',18.885516, -70.099540, 0, null, null],
+				['Algeria',28.242122, 2.896663, 0, null, null],
+				['East Asia & Pacific (developing only)',null,null, 0, null, null],
+				['East Asia & Pacific (all income levels)',null,null, 0, null, null],
+				['Europe & Central Asia (developing only)',null,null, 0, null, null],
+				['Europe & Central Asia (all income levels)',null,null, 0, null, null],
+				['Ecuador',-1.364663, -78.708177, 0, null, null],
+				['Egypt, Arab Rep.',26.786741, 30.356207, 0, null, null],
+				['Euro area',null,null, 0, null, null],
+				['Eritrea',15.362439, 38.964188, 0, null, null],
+				['Spain',39.517012, -3.361438, 0, null, null],
+				['Estonia',58.674681, 25.811230, 0, null, null],
+				['Ethiopia',8.639029, 40.455450, 0, null, null],
+				['European Union',null,null, 0, null, null],
+				['Fragile and conflict affected situations',null,null, 0, null, null],
+				['Finland',62.124920, 26.462763, 0, null, null],
+				['Fiji',-17.823688, 177.928959, 0, null, null],
+				['France',46.564322, 2.780985, 0, null, null],
+				['Faeroe Islands',62.120683, -6.983957, 0, null, null],
+				['Micronesia, Fed. Sts.',null, null, 0, null, null],
+				['Gabon',-0.574174, 11.931592, 0, null, null],
+				['United Kingdom',55.023117, -1.993129, 0, null, null],
+				['Georgia',42.559961, 43.360375, 0, null, null],
+				['Ghana',7.924309, -1.052629, 0, null, null],
+				['Guinea',10.467988, -10.918576, 0, null, null],
+				['Gambia, The',13.444815, -15.396636, 0, null, null],
+				['Guinea-Bissau',12.109351, -14.951102, 0, null, null],
+				['Equatorial Guinea',10.435576, -10.863645, 0, null, null],
+				['Greece',39.514739, 22.601776, 0, null, null],
+				['Grenada',12.116850, -61.676007, 0, null, null],
+				['Greenland',76.497945, -40.064317, 0, null, null],
+				['Guatemala',15.666826, -90.298382, 0, null, null],
+				['Guam',13.440190, 144.786085, 0, null, null],
+				['Guyana',4.888516, -58.974985, 0, null, null],
+				['High income',null,null, 0, null, null],
+				['Hong Kong SAR, China',null, null, 0, null, null],
+				['Honduras',14.819429, -86.725407, 0, null, null],
+				['Heavily indebted poor countries (HIPC)',null,null, 0, null, null],
+				['Croatia',45.163458, 15.051635, 0, null, null],
+				['Haiti',18.853229, -73.021120, 0, null, null],
+				['Hungary',47.037763, 19.571672, 0, null, null],
+				['Indonesia',-4.084389, 122.497285, 0, null, null],
+				['Isle of Man',54.229265, -4.521439, 0, null, null],
+				['India',22.639844, 79.966723, 0, null, null],
+				['Not classified',null,null, 0, null, null],
+				['Ireland',53.198940, -8.240819, 0, null, null],
+				['Iran, Islamic Rep.',31.993135, 54.517977, 0, null, null],
+				['Iraq',33.027708, 43.113470, 0, null, null],
+				['Iceland',65.010294, -18.625662, 0, null, null],
+				['Israel',31.031222, 34.829130, 0, null, null],
+				['Italy',43.578600, 12.441775, 0, null, null],
+				['Jamaica',18.161194, -77.311708, 0, null, null],
+				['Jordan',31.284557, 36.789169, 0, null, null],
+				['Japan',35.788770, 138.004487, 0, null, null],
+				['Kazakhstan',null, null, 0, null, null],
+				['Kenya',0.429563, 37.952304, 0, null, null],
+				['Kyrgyz Republic',null, null, 0, null, null],
+				['Cambodia',12.755242, 105.178368, 0, null, null],
+				['Kiribati',1.876066, -157.422339, 0, null, null],
+				['St. Kitts and Nevis',17.155496, -62.581801, 0, null, null],
+				['Korea, Rep.',36.508812, 127.997284, 0, null, null],
+				['Kosovo',null, null, 0, null, null],
+				['Kuwait',29.321261, 47.464283, 0, null, null],
+				['Latin America & Caribbean (developing only)',18.440709, -71.239810, 0, null, null],
+				['Lao PDR',19.712836, 102.680526, 0, null, null],
+				['Lebanon',33.898639, 35.786845, 0, null, null],
+				['Liberia',6.340896, -9.279605, 0, null, null],
+				['Libya',27.060301, 17.532882, 0, null, null],
+				['St. Lucia',null,null, 0, null, null],
+				['Latin America & Caribbean (all income levels)',null,null, 0, null, null],
+				['Least developed countries: UN classification',null,null, 0, null, null],
+				['Low income',null,null, 0, null, null],
+				['Liechtenstein',47.154516, 9.579728, 0, null, null],
+				['Sri Lanka',7.599616, 80.590480, 0, null, null],
+				['Lower middle income',null,null, 0, null, null],
+				['Low & middle income',null,null, 0, null, null],
+				['Lesotho',-29.611251, 28.277415, 0, null, null],
+				['Lithuania',null, null, 0, null, null],
+				['Luxembourg',null, null, 0, null, null],
+				['Latvia',null, null, 0, null, null],
+				['Macao SAR, China',null, null, 0, null, null],
+				['St. Martin (French part)',null, null, 0, null, null],
+				['Morocco',31.897484, -6.645315, 0, null, null],
+				['Monaco',null, null, 0, null, null],
+				['Moldova',null, null, 0, null, null],
+				['Madagascar',-21.153995, 45.867663, 0, null, null],
+				['Maldives',1.988570, 73.536103, 0, null, null],
+				['Middle East & North Africa (all income levels)',null,null, 0, null, null],
+				['Mexico',23.887473, -102.185938, 0, null, null],
+				['Marshall Islands',6.113115, 172.101302, 0, null, null],
+				['Middle income',null,null, 0, null, null],
+				['Macedonia, FYR',null, null, 0, null, null],
+				['Mali',18.180883, -1.700595, 0, null, null],
+				['Malta',35.889798, 14.434456, 0, null, null],
+				['Myanmar',21.729819, 96.363423, 0, null, null],
+				['Middle East & North Africa (developing only)',30.495252, 30.745258, 0, null, null],
+				['Montenegro',null, null, 0, null, null],
+				['Mongolia',46.789940, 103.483222, 0, null, null],
+				['Northern Mariana Islands',15.171677, 145.739483, 0, null, null],
+				['Mozambique',-17.520980, 35.791008, 0, null, null],
+				['Mauritania',21.816332, -10.907219, 0, null, null],
+				['Mauritius',-20.265922, 57.615075, 0, null, null],
+				['Malawi',-13.515575, 34.207656, 0, null, null],
+				['Malaysia',2.616234, 113.551254, 0, null, null],
+				['North America',54.641318, -105.297852, 0, null, null],
+				['Namibia',-22.053639, 17.921710, 0, null, null],
+				['New Caledonia',-21.297760, 165.489153, 0, null, null],
+				['Niger',17.544779, 9.486626, 0, null, null],
+				['Nigeria',9.478926, 8.699430, 0, null, null],
+				['Nicaragua',12.885230, -84.976395, 0, null, null],
+				['Netherlands',52.162476, 5.576001, 0, null, null],
+				['High income: nonOECD',null,null, 0, null, null],
+				['Norway',62.156933, 8.571831, 0, null, null],
+				['Nepal',28.208834, 83.998162, 0, null, null],
+				['New Zealand',-42.574500, 172.227369, 0, null, null],
+				['High income: OECD',null,null, 0, null, null],
+				['OECD members',null,null, 0, null, null],
+				['Oman',20.656603, 56.315207, 0, null, null],
+				['Other small states',null,null, 0, null, null],
+				['Pakistan',30.294586, 69.308350, 0, null, null],
+				['Panama',8.593923, -80.061419, 0, null, null],
+				['Peru',-10.774834, -76.045104, 0, null, null],
+				['Philippines',12.621451, 123.544606, 0, null, null],
+				['Palau',7.519546, 134.560496, 0, null, null],
+				['Papua New Guinea',-6.755785, 144.239726, 0, null, null],
+				['Poland',52.093007, 19.006347, 0, null, null],
+				['Puerto Rico',18.239157, -66.341688, 0, null, null],
+				['Korea, Dem. Rep.',40.267056, 127.040116, 0, null, null],
+				['Portugal',39.616458, -8.381004, 0, null, null],
+				['Paraguay',-23.283421, -58.382432, 0, null, null],
+				['Pacific island small states',null,null, 0, null, null],
+				['French Polynesia',-17.674979, -149.382540, 0, null, null],
+				['Qatar',25.334553, 51.251589, 0, null, null],
+				['Romania',45.689262, 24.723786, 0, null, null],
+				['Russian Federation',null, null, 0, null, null],
+				['Rwanda',-1.995811, 29.973820, 0, null, null],
+				['South Asia',null,null, 0, null, null],
+				['Saudi Arabia',24.166711, 46.601990, 0, null, null],
+				['Sudan',null, null, 0, null, null],
+				['Senegal',14.345890, -14.417255, 0, null, null],
+				['Singapore',1.286242, 103.842206, 0, null, null],
+				['Solomon Islands',-9.600273, 160.000379, 0, null, null],
+				['Sierra Leone',8.484971, -11.693674, 0, null, null],
+				['El Salvador',13.673596, -89.163515, 0, null, null],
+				['San Marino',43.937068, 12.461467, 0, null, null],
+				['Somalia',2.905847, 45.632412, 0, null, null],
+				['Serbia',null, null, 0, null, null],
+				['Sub-Saharan Africa (developing only)',null,null, 0, null, null],
+				['South Sudan',7.394455, 30.705665, 0, null, null],
+				['Sub-Saharan Africa (all income levels)',null,null, 0, null, null],
+				['Small states',null,null, 0, null, null],
+				['Sao Tome and Principe',0.223728, 6.632537, 0, null, null],
+				['Suriname',4.093166, -55.758080, 0, null, null],
+				['Slovak Republic',null, null, 0, null, null],
+				['Slovenia',null, null, 0, null, null],
+				['Sweden',64.427326, 16.950660, 0, null, null],
+				['Swaziland',-26.569260, 31.435308, 0, null, null],
+				['Sint Maarten (Dutch part)',null, null, 0, null, null],
+				['Seychelles',-4.654801, 55.425446, 0, null, null],
+				['Syrian Arab Republic',35.017609, 39.013493, 0, null, null],
+				['Turks and Caicos Islands',21.809587, -71.753764, 0, null, null],
+				['Chad',14.958417, 19.042618, 0, null, null],
+				['Togo',8.577563, 1.150993, 0, null, null],
+				['Thailand',15.699261, 101.094596, 0, null, null],
+				['Tajikistan',null, null, 0, null, null],
+				['Turkmenistan',null, null, 0, null, null],
+				['Timor-Leste',-8.660369, 126.002333, 0, null, null],
+				['Tonga',-21.177135, -175.182101, 0, null, null],
+				['Trinidad and Tobago',10.388336, -61.235120, 0, null, null],
+				['Tunisia',34.257148, 10.088108, 0, null, null],
+				['Turkey',38.948872, 35.439330, 0, null, null],
+				['Tuvalu',-7.476527, 178.675887, 0, null, null],
+				['Tanzania',-6.361907, 35.463772, 0, null, null],
+				['Uganda',1.582317, 32.369159, 0, null, null],
+				['Ukraine',null, null, 0, null, null],
+				['Upper middle income',null,null, 0, null, null],
+				['Uruguay',-32.831063, -56.035581, 0, null, null],
+				['United States',39.963353, -97.686484, 0, null, null],
+				['Uzbekistan',null, null, 0, null, null],
+				['St. Vincent and the Grenadines',13.264514, -61.208769, 0, null, null],
+				['Venezuela, RB',7.194772, -65.723264, 0, null, null],
+				['Virgin Islands (U.S.)',18.352892, -64.747687, 0, null, null],
+				['Vietnam',14.397275, 108.179726, 0, null, null],
+				['Vanuatu',-15.242685, 167.024122, 0, null, null],
+				['West Bank and Gaza',null,null, 0, null, null],
+				['World',null,null, 0, null, null],
+				['Samoa',-13.636896, -172.406892, 0, null, null],
+				['Yemen, Rep.',15.902878, 47.669477, 0, null, null],
+				['South Africa',-30.827692, 24.408555, 0, null, null],
+				['Congo, Dem. Rep.',-2.783315, 23.507873, 0, null, null],
+				['Zambia',-13.386296, 27.986027, 0, null, null],
+				['Zimbabwe',-18.922329, 30.119599, 0, null, null]
+			];
+			var imageWood = [{
+				url: 'images/ki5.png',
+				scaledSize : new google.maps.Size(6, 8),
+			},{
+				url: 'images/ki5.png',
+				scaledSize : new google.maps.Size(13, 16),
+			},{
+				url: 'images/ki4.png',
+				scaledSize : new google.maps.Size(18, 24),
+			},{
+				url: 'images/ki4.png',
+				scaledSize : new google.maps.Size(25, 32),
+			},{
+				url: 'images/ki3.png',
+				scaledSize : new google.maps.Size(33, 36),
+			},{
+				url: 'images/ki3.png',
+				scaledSize : new google.maps.Size(33, 42),
+			},{
+				url: 'images/ki2.png',
+				scaledSize : new google.maps.Size(38, 48),
+			},{
+				url: 'images/ki2.png',
+				scaledSize : new google.maps.Size(50, 64),
+			},{
+				url: 'images/ki1.png',
+				scaledSize : new google.maps.Size(62, 80),
+			},{
+				url: 'images/ki1.png',
+				scaledSize : new google.maps.Size(128, 128),
+			}];
+			var imageIndicator = [{
+				url: 'images/hito5.png',
+				scaledSize : new google.maps.Size(5, 8),
+			},{
+				url: 'images/hito5.png',
+				scaledSize : new google.maps.Size(12, 16),
+			},{
+				url: 'images/hito4.png',
+				scaledSize : new google.maps.Size(17, 24),
+			},{
+				url: 'images/hito4.png',
+				scaledSize : new google.maps.Size(24, 32),
+			},{
+				url: 'images/hito3.png',
+				scaledSize : new google.maps.Size(32, 36),
+			},{
+				url: 'images/hito3.png',
+				scaledSize : new google.maps.Size(32, 42),
+			},{
+				url: 'images/hito2.png',
+				scaledSize : new google.maps.Size(37, 48),
+			},{
+				url: 'images/hito2.png',
+				scaledSize : new google.maps.Size(49, 64),
+			},{
+				url: 'images/hito1.png',
+				scaledSize : new google.maps.Size(61, 80),
+			},{
+				url: 'images/hito1.png',
+				scaledSize : new google.maps.Size(100, 128),
+			}];
+
+			var displayMode = [true, true];
+			var displayType = ["indicator", "wood"];
+			var timerId = null;
+			var map = null;
+
+			function reverseTimer() {
+				if (timerId != null) {
+					document.getElementById("imageLeft").src  = "images/yajirusi1.png";
+					document.getElementById("imageRight").src = "images/yajirusi2.png";
+					clearTimeout(timerId);
+					timerId = null;
+				} else {
+					document.getElementById("imageLeft").src  = "images/yajirusi3.png";
+					document.getElementById("imageRight").src = "images/yajirusi2.png";
+					decSelYear();
+				}
+			}
+
+			function decSelYear() {
+				var selYear = document.forms[0].selYear;
+				if (selYear.selectedIndex > 0) {
+					selYear.selectedIndex -= 1;
+					reload(false);
+
+					timerId = setTimeout(function () {
+						decSelYear();
+					} , 1000);
+				} else {
+					document.getElementById("imageLeft").src  = "images/yajirusi1.png";
+					document.getElementById("imageRight").src = "images/yajirusi2.png";
+					clearTimeout(timerId);
+					timerId = null;
+				}
+			}
+
+			function startTimer() {
+				if (timerId != null) {
+					document.getElementById("imageLeft").src  = "images/yajirusi1.png";
+					document.getElementById("imageRight").src = "images/yajirusi2.png";
+					clearTimeout(timerId);
+					timerId = null;
+				} else {
+					document.getElementById("imageLeft").src  = "images/yajirusi1.png";
+					document.getElementById("imageRight").src = "images/yajirusi4.png";
+					incSelYear();
+				}
+			}
+
+			function incSelYear() {
+				var selYear = document.forms[0].selYear;
+				if (selYear.selectedIndex < selYear.options.length - 1) {
+					selYear.selectedIndex += 1;
+					reload(false);
+
+					timerId = setTimeout(function () {
+						incSelYear();
+					} , 1000);
+				} else {
+					document.getElementById("imageLeft").src  = "images/yajirusi1.png";
+					document.getElementById("imageRight").src = "images/yajirusi2.png";
+					clearTimeout(timerId);
+					timerId = null;
+				}
+			}
+
+			function reverseIndicator() {
+				displayMode[0] = !displayMode[0];
+				reload(false);
+			}
+
+			function reverseWood() {
+				displayMode[1] = !displayMode[1];
+				reload(false);
+			}
+
+			function reload(reloadMap) {
+
+				for (var i = 0; i < displayMode.length; i++) {
+					for (var j = 0; j < areas.length; j++) {
+						if (areas[j][4 + i] != null) {
+							areas[j][4 + i].setMap(null);
+						}
+					}
+				}
+
+				// 表示を更新する場合
+				if (reloadMap) {
+					// 地図
+					map = new google.maps.Map(document.getElementById("map"), {
+					  zoom       : 2,
+					  center     : new google.maps.LatLng(35.710139, 139.810833),
+					  disableDefaultUI: true,
+					  scrollwheel: false,
+					  panControl:true,
+					  zoomControl:true,
+					  scaleControl:true,
+					  mapTypeId  : google.maps.MapTypeId.ROADMAP,
+					});
+				}
+
+				var selYear = document.forms[0].selYear;
+				var selYearValue = selYear.options[selYear.selectedIndex].value;
+
+				// JSON
+				if (displayMode[1]) {
+
+					document.getElementById("imageWood").src  = "images/newbotan3.png";
+
+					var httpObj0 = new XMLHttpRequest();
+					httpObj0.open("get", "/earth/" + selYearValue + "_" + displayType[1] + ".json", true);
+
+					httpObj0.onload = function() {
+						var myData = JSON.parse(this.responseText);
+
+						for (var j = 0; j < areas.length; j++) {
+
+							if (j > myData.item.length) {
+								break;
+							}
+
+							//alert("dddd:" + k + " " + displayType[k]);
+							if ((myData.item[j].value != null) && (areas[j][1] != null)
+															   && (areas[j][2] != null)) {
+
+								var index = Math.min(Math.round(myData.item[j].value / 500000), imageWood.length - 1);
+								// マーカー
+								var marker = new google.maps.Marker({
+									position: new google.maps.LatLng(areas[j][1], areas[j][2]),
+									map     : map,
+							        icon    : imageWood[index],
+							        title   : areas[j][0],
+							        zIndex  : areas[j][3]
+							    });
+								//new google.maps.Circle({
+								//	center        : new google.maps.LatLng(areas[j][1], areas[j][2]),
+								//	fillColor     : '#00c000',
+								//	fillOpacity   : 0.5,
+								//	radius        : 200000,
+								//	strokeColor   : '#00ff00',
+								//	strokeOpacity : 1,
+								//	strokeWeight  : 1,
+								//	map           : map
+							    //});
+								areas[j][4] = marker;
+							}
+						}
+					};
+					httpObj0.send(null);
+				} else {
+					document.getElementById("imageWood").src  = "images/newbotan2.png";
+				}
+
+				if (displayMode[0]) {
+
+					document.getElementById("imageIndicator").src  = "images/newbotan4.png";
+
+					var httpObj0 = new XMLHttpRequest();
+					httpObj0.open("get", "/earth/" + selYearValue + "_" + displayType[0] + ".json", true);
+
+					httpObj0.onload = function() {
+						var myData = JSON.parse(this.responseText);
+
+						for (var j = 0; j < areas.length; j++) {
+							if (j > myData.item.length) {
+								break;
+							}
+
+							//alert("dddd:" + k + " " + displayType[k]);
+							if ((myData.item[j].value != null) && (areas[j][1] != null)
+															   && (areas[j][2] != null)) {
+
+								var index = Math.min(Math.round(myData.item[j].value / 50000000), imageIndicator.length - 1);
+
+								// マーカー
+								var marker = new google.maps.Marker({
+									position: new google.maps.LatLng(areas[j][1], areas[j][2]),
+									map     : map,
+							        icon    : imageIndicator[index],
+							        title   : areas[j][0],
+							        zIndex  : areas[j][3]
+							    });
+								areas[j][5] = marker;
+							}
+						}
+					};
+					httpObj0.send(null);
+				} else {
+					document.getElementById("imageIndicator").src  = "images/newbotan.png";
+				}
+			}
+		</script>
+	</head>
+	<body background="images/back.jpg" onload="reload(true)">
+		<form name="mainForm">
+			<!-- ヘッダー -->
+			<div style="width:2823px;border:none;">
+			<div style="height:1100px;">
+				<img alt="森ヘッダー" src="images/notline0419-18.png" style="position: absolute; z-index: 1;margin-left:auto;margin-right:auto;margin-bottom:none;border:none;"/>
+				<img alt="タイトル" src="images/04191-18.png" style="position: absolute; z-index: 2;top: 300px;left:850px;border:none;"/>
+				<div style="font-family: 'メイリオ', sans-serif;position: absolute; z-index: 3;top: 1350px;left:1800px;width:160px;">
+					*2015年4月12日現在
+				</div>
+			</div>
+			<div style="height:300px;"></div>
+			<div align="center">
+				<img id="imageLeft" src="images/yajirusi1.png" width="100px" height="45px" alt="逆再生" onclick="reverseTimer();" style="vertical-align: text-bottom;cursor:pointer;cursor:hand;"/>
+				<!-- プルダウン -->
+				<select name="selYear" onchange="reload(null);" style="font-family: 'メイリオ', sans-serif;font-size:19pt;vertical-align: text-bottom;width:130px;">
+					<option value="1990">1990年</option>
+					<option value="1991">1991年</option>
+					<option value="1992">1992年</option>
+					<option value="1993">1993年</option>
+					<option value="1994">1994年</option>
+					<option value="1995">1995年</option>
+					<option value="1996">1996年</option>
+					<option value="1997">1997年</option>
+					<option value="1998">1998年</option>
+					<option value="1999">1999年</option>
+
+					<option value="2000">2000年</option>
+					<option value="2001">2001年</option>
+					<option value="2002">2002年</option>
+					<option value="2003">2003年</option>
+					<option value="2004">2004年</option>
+					<option value="2005">2005年</option>
+					<option value="2006">2006年</option>
+					<option value="2007">2007年</option>
+					<option value="2008">2008年</option>
+					<option value="2009">2009年</option>
+
+					<option value="2000">2010年</option>
+					<option value="2001">2011年</option>
+					<option value="2002">2012年</option>
+				</select>
+
+				<img id="imageRight" src="images/yajirusi2.png" width="100px" height="45px" alt="再生" onclick="startTimer();" style="vertical-align: text-bottom;cursor:pointer;cursor:hand;"/>
+			</div>
+
+			<!-- 地図 -->
+			<div style="height:8px;"></div>
+			<div id="map" class="map_canvas" style="width:1100px;height:600px;margin-left:auto;margin-right:auto;"align="center">
+				<iframe ></iframe>
+			</div>
+
+			<!-- フッター -->
+			<div style="height:8px;"></div>
+			<div align="center">
+				<img id="imageIndicator" width="100px" height="59px" alt="森" onclick="reverseIndicator();" style="cursor:pointer;cursor:hand" /><img
+				id="imageWood" width="100px" height="59px" alt="人" onclick="reverseWood();" style="cursor:pointer;cursor:hand"/>
+			</div>
+			</div>
+		</form>
+	</body>
+</html>
